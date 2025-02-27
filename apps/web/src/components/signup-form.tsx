@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +31,7 @@ const formSchema = z.object({
 });
 
 export function SignUpForm() {
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
   // ...
 
   // 1. Define your form.
@@ -52,6 +54,11 @@ export function SignUpForm() {
     formData.append("password", values.password);
 
     const result = await signUp({}, formData);
+    if (result && result.message) {
+      setResultMessage(result.message);
+    } else {
+      setResultMessage("An error occurred. Please try again.");
+    }
     console.log(result);
   }
 
@@ -109,6 +116,9 @@ export function SignUpForm() {
         />
 
         <Button type="submit">Submit</Button>
+        {resultMessage && (
+          <p className="text-foreground text-sm">{resultMessage}</p>
+        )}
       </form>
     </Form>
   );
