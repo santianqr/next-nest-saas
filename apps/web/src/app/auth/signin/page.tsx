@@ -1,5 +1,10 @@
-export default function SingIn() {
+import { SignIn } from "@/components/signin-form";
+
+export default function SingInPage() {
   return (
-    <div>Sign In page</div>
-  )
+    <div>
+      <h1>Sign In page</h1>
+      <SignIn />
+    </div>
+  );
 }

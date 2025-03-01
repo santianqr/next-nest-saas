@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { FormState, SignupFormSchema } from "./type";
+import { FormState, SignupFormSchema, LoginFormSchema } from "./type";
 
 export async function signUp(
   state: FormState,
@@ -35,4 +35,40 @@ export async function signUp(
           ? "The user is already existed!"
           : response.statusText,
     };
+}
+
+export async function signIn(
+  state: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const validatedFields = LoginFormSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      error: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await fetch(`${process.env.BACKEND_URL}/auth/signin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(validatedFields.data),
+  });
+
+  if (response.ok) {
+    const result = await response.json();
+    // TODO: Create The Session For Authenticated User.
+
+    console.log({ result });
+  } else {
+    return {
+      message:
+        response.status === 401 ? "Invalid Credentials!" : response.statusText,
+    };
+  }
 }

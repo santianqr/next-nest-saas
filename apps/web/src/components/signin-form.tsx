@@ -16,22 +16,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/auth";
 import Link from "next/link";
+import { signIn } from "@/lib/auth";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+  password: z.string(),
 });
 
-export function SignUp() {
+export function SignIn() {
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   // ...
 
@@ -39,7 +34,6 @@ export function SignUp() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -48,40 +42,23 @@ export function SignUp() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Usa la función signUp con los valores del formulario
+
     const formData = new FormData();
-    formData.append("name", values.name);
     formData.append("email", values.email);
     formData.append("password", values.password);
 
-    const result = await signUp({}, formData);
-    if (result && result.message) {
-      setResultMessage(result.message);
-    } else {
-      setResultMessage("An error occurred. Please try again.");
-    }
-    console.log(result);
+    const result = await signIn({}, formData);
+        if (result && result.message) {
+          setResultMessage(result.message);
+        } else {
+          setResultMessage("An error occurred. Please try again.");
+        }
+        console.log(result);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="your name" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
@@ -108,23 +85,25 @@ export function SignUp() {
               <FormControl>
                 <Input placeholder="your password" type="password" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+              <FormDescription>This is your private password.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        
-        <Button type="submit">Submit</Button>
+        <Link className="text-sm underline" href="/auth/signin">
+          Forgot your password?
+        </Link>
+        <Button type="submit">Sign In</Button>
         {resultMessage && (
           <p className="text-foreground text-sm">{resultMessage}</p>
         )}
-      </form>
-      <div>
-          <p>Already have an account?</p>
-          <Link className='text-sm underline' href="/auth/signin">Sign In</Link> 
+        <div>
+          <p>Don&apos;t have an account?</p>
+          <Link className="text-sm underline" href="/auth/signup">
+            Sign Up
+          </Link>
         </div>
+      </form>
     </Form>
   );
 }
