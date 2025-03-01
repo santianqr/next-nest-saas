@@ -67,7 +67,7 @@ export async function signIn(
     await createSession({
       user: {
         id: result.id,
-        email: result.email,
+        name: result.name,
       },
     });
     redirect("/");
