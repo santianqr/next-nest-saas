@@ -13,7 +13,7 @@ export async function SignInBtn() {
       ) : (
         <>
           <p>{session.user.name}</p>
-          <Link href="#">Sign Out</Link>
+          <Link href="/api/auth/signout">Sign Out</Link>
         </>
       )}
     </div>

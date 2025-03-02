@@ -49,3 +49,7 @@ export async function getSession() {
     redirect("/auth/sigin");
   }
 }
+
+export async function deleteSession() {
+  (await cookies()).delete("session");
+}
