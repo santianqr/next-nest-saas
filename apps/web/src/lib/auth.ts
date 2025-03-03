@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { FormState, SignupFormSchema, LoginFormSchema } from "./type";
-import { createSession } from "./session";
+import { createSession, updateTokens } from "./session";
 
 export async function signUp(
   state: FormState,
@@ -80,3 +80,27 @@ export async function signIn(
     };
   }
 }
+
+export const refreshToken = async (oldRefreshToken: string) => {
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/auth/refresh`, {
+      method: "POST",
+      body: JSON.stringify({
+        refresh: oldRefreshToken,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failded to refresh token");
+    }
+
+    const { accessToken, refreshToken } = await response.json();
+
+    await updateTokens({ accessToken, refreshToken });
+
+    return accessToken;
+  } catch (err) {
+    console.log("Refresh Token failed:", err);
+    return null;
+  }
+};
