@@ -27,12 +27,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     done: VerifyCallback,
   ) {
     const user = await this.authService.validateGoogleUser({
-      email: profile.email[0].value,
+      email: profile.emails[0].value,
       name: profile.displayName,
       password: '',
     });
 
     done(null, user);
-    // return user;
+    // return user
+    // request.user
   }
 }
