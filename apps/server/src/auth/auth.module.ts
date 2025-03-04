@@ -11,6 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import refreshConfig from './config/refresh.config';
 import { RefreshStrategy } from './strategies/refresh-token.strategy';
 import googleOauthConfig from './config/google-oauth.config';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,6 @@ import googleOauthConfig from './config/google-oauth.config';
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshConfig),
     ConfigModule.forFeature(googleOauthConfig),
-
   ],
   controllers: [AuthController],
   providers: [
@@ -27,7 +27,8 @@ import googleOauthConfig from './config/google-oauth.config';
     PrismaService,
     LocalStrategy,
     JwtStrategy,
-    RefreshStrategy
+    RefreshStrategy,
+    GoogleStrategy,
   ],
 })
 export class AuthModule {}
