@@ -31,7 +31,8 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('User not found!');
     const isPasswordMatched = verify(user.password, password);
-    if (!isPasswordMatched) throw new UnauthorizedException('Invalid password');
+    if (!isPasswordMatched)
+      throw new UnauthorizedException('Invalid Credentials!');
 
     return { id: user.id, name: user.name, role: user.role };
   }

@@ -1,6 +1,7 @@
 import { authFetch } from "@/lib/authFetch";
 import { deleteSession } from "@/lib/session";
 import { revalidatePath } from "next/cache";
+import { redirect, RedirectType } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -12,8 +13,9 @@ export async function GET(req: NextRequest) {
   }
   // await deleteSession();
 
-  revalidatePath("/", "layout");
-  revalidatePath("/", "page");
+  // revalidatePath("/", "layout");
+  // revalidatePath("/", "page");
 
-  return NextResponse.redirect(new URL("/", req.nextUrl));
+  // return NextResponse.redirect(new URL("/", req.nextUrl));
+  redirect("/", RedirectType.push);
 }
