@@ -17,6 +17,8 @@ import { RefreshAutGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Response } from 'express';
 import { Public } from './decorators/public.decorator';
+import { Roles } from './decorators/roles.decorator';
+import { RolesGuard } from './guards/roles/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +27,7 @@ export class AuthController {
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
   }
-  	
+
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('signin')
@@ -33,6 +35,8 @@ export class AuthController {
     return this.authService.login(req.user.id, req.user.name);
   }
 
+  @Roles('ADMIN', 'EDITOR')
+  @UseGuards(RolesGuard)
   @Get('protected')
   getall(@Request() req) {
     return {
